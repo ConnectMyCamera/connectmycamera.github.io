@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset=utf-8>
+  <meta http-equiv=X-UA-Compatible content="IE=edge">
+  <meta name=viewport content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/g/bootstrap@3.3.6(css/bootstrap.min.css),bootstrap-social@4.11.0"></style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.5.0/css/font-awesome.min.css"></style>
+
+  <title>FTP for Dropbox &middot; Connect to your Dropbox with FTP</title>
+  <script type="text/javascript" src="//cdn.jsdelivr.net/g/lodash@3.10,jquery@2,bootstrap@3,cookies.js"></script>
+  <script type="text/javascript">
+!function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.1.0";
+analytics.load("vPzoPNPYDogMwhoQPdO8JGB9YwVsgtWF");
+analytics.page()
+}}();
+</script>
+<style type="text/css">
+
+  html {
+    position: relative;
+    min-height: 100%;
+  }
+
+  body {
+    margin-bottom: 4em;
+    color: #7b8994;
+  }
+
+  footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
+    x-background-color: #f5f5f5;
+    text-align: center;
+
+    line-height: 60px;
+    vertical-align: middle;
+  }
+
+  footer a {
+    color: #7b8994;
+  }
+
+  .btn.btn-xl {
+    font-size: 32px;
+    font-weight: 300;
+    line-height: 2em;
+    border-radius: 999px;
+    padding: 0.25em 2em;
+  }
+
+  #hero .jumbotron {
+    background: transparent;
+  }
+
+  h1, h2, h3 {
+    font-weight: 300;
+  }
+
+  #hero h1 {
+    font-weight: 100;
+    text-align: center;
+    margin-bottom: 1.5em;
+  }
+  #hero h2 {
+    background: transparent url('./hero.png') center center no-repeat;
+    width: 100%;
+    height: 128px;
+  }
+
+  @media (max-width: 600px) {
+    #hero h2 {
+      background-size: contain;
+    }
+  }
+
+  #connect-to-dropbox {
+    text-align: center;
+  }
+
+  #connect-to-dropbox .btn {
+    margin-bottom: 1.5em;
+  }
+
+  #user-signed-up-waiting {
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+  <section id="hero" class="page-row">
+  <div class="jumbotron">
+    <div class="container">
+      <h1>Access your Dropbox with FTP</h1>
+      <h2></h2>
+    </div>
+  </div>
+</section>
+<section class="hide" id="connect-to-dropbox">
+  <a class="btn btn-primary btn-xl btn-dropbox" href="https://www.dropbox.com/1/oauth2/authorize?client_id=vmgx95t41aafho7&response_type=token&&redirect_uri=http://localhost:8080/">
+    Connect your Dropbox
+  </a>
+  <p>Free trial. No credit card required.</p>
+</section>
+<section class="hide" id="user-signed-up-waiting">
+  <h3>Hooray, <span class="firstName"></span>!</h3>
+  <h3>We’ve sent e-mail to <span class="email"></span></h3>
+  <h3>Please check your inbox.</h3>
+</section>
+<footer>
+  Made with ♡ by <a href="https://twitter.com/AndreasPizsa">Andreas Pizsa</a>, not by <a href="http://dropbox.com">Dropbox</a>.
+</footer>
+<script type="text/coffeescript" src="index.coffee"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/coffeescript/1.7.1/coffee-script.min.js"></script>
+</body>
+</html>
