@@ -10,7 +10,7 @@
   <title>FTP for Dropbox &middot; Free Trial</title>
   <meta name="description" content="Use Dropbox with your favorite FTP enabled apps and devices. Upload videos and images from your wireless camera to your Dropbox.">
   <meta name="keywords" content="dropbox,ftp,camera,wifi camera, ip camera">
-  <meta property="og:image" content="http://ftpfordropbox.com/facebook-preview.png" />
+  <meta property="og:image" content="https://ftpfordropbox.com/facebook-preview.png" />
 
   <script type="text/javascript">
 !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.1.0";
@@ -28,6 +28,7 @@ analytics.page()
   body {
     margin-bottom: 4em;
     color: #7b8994;
+    text-align: center;
   }
 
   footer {
@@ -65,17 +66,17 @@ analytics.page()
 
   #hero h1 {
     font-weight: 100;
-    text-align: center;
     margin-bottom: 1.5em;
   }
-  #hero h2 {
+
+  #hero .image {
     background: transparent url('hero.png') center center no-repeat;
     width: 100%;
     height: 128px;
   }
 
   @media (max-width: 600px) {
-    #hero h2 {
+    #hero .image {
       background-size: contain;
     }
   }
@@ -98,7 +99,7 @@ analytics.page()
   <div class="jumbotron">
     <div class="container">
       <h1>Access your Dropbox with FTP</h1>
-      <h2></h2>
+      <div class="image"></div>
     </div>
   </div>
 </section>
@@ -113,8 +114,11 @@ analytics.page()
   <h3>We’ve sent e-mail to <span class="email"></span></h3>
   <h3>Please check your inbox.</h3>
 </section>
+<section id="marketing">
+</section>
+
 <footer>
-  Made with ♡ by <a href="https://twitter.com/AndreasPizsa">Andreas Pizsa</a>, not by <a href="http://dropbox.com">Dropbox</a>.
+  Made with ♡ by <a href="https://twitter.com/AndreasPizsa">Andreas Pizsa</a>.
 </footer>
 <script type="text/javascript" src="//cdn.jsdelivr.net/g/lodash@3.10,jquery@2,bootstrap@3,cookies.js"></script>
 <script type="text/coffeescript" src="index.coffee"></script>
