@@ -1,3 +1,4 @@
+
 objectFromUrlParameters = (hash)->
   hashParameters = {}
   hash.split('&').forEach (keyValue)->
@@ -7,7 +8,7 @@ objectFromUrlParameters = (hash)->
 
 updateDropboxAuthentication = (accessToken)->
   $.ajax
-    url:        'http://localhost:8000/api/beta/join'
+    url:        '//api.ftpfordropbox.com/api/beta/join'
     type:       'post'
     xhrFields:
       withCredentials: true
@@ -55,3 +56,6 @@ else
     analytics.user().load()
     bindUserTraits()
     updateVisibleSection()
+
+$link = $('a[href^="https://www.dropbox.com/1/oauth2/authorize"]')
+$link.attr 'href', $link.attr('href') + "&redirect_uri=" + encodeURIComponent window.location.href
