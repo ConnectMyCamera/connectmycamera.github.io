@@ -40,7 +40,13 @@ bindUserTraits = ->
   traits = analytics.user().traits()
   _.forOwn traits, (value,key)-> $(".#{key}").text value
 
-analytics.on 'identify', bindUserTraits
+analytics.ready ->
+  if hashParameters.access_token
+    updateDropboxAuthentication hashParameters.access_token
+  else
+    analytics.user().load()
+    bindUserTraits()
+    updateVisibleSection()
 
 hashParameters = objectFromUrlParameters window.location.hash.substr 1
 history.pushState(
@@ -49,13 +55,8 @@ history.pushState(
   window.location.pathname + window.location.search
 )
 
-if hashParameters.access_token
-  updateDropboxAuthentication hashParameters.access_token
-else
-  analytics.ready ->
-    analytics.user().load()
-    bindUserTraits()
-    updateVisibleSection()
-
 $link = $('a[href^="https://www.dropbox.com/1/oauth2/authorize"]')
 $link.attr 'href', $link.attr('href') + "&redirect_uri=" + encodeURIComponent window.location.href
+
+analytics.on 'identify', bindUserTraits
+
