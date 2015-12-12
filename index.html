@@ -4,20 +4,22 @@
   <meta charset=utf-8>
   <meta http-equiv=X-UA-Compatible content="IE=edge">
   <meta name=viewport content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/g/bootstrap@3.3.6(css/bootstrap.min.css),bootstrap-social@4.11.0"></style>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.5.0/css/font-awesome.min.css"></style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/g/bootstrap@3.3.6(css/bootstrap.min.css),bootstrap-social@4.11.0,spinkit,animatecss">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/fontawesome/4.5.0/css/font-awesome.min.css">
 
   <title>FTP for Dropbox &middot; Free Trial</title>
   <meta name="description" content="Use Dropbox with your favorite FTP enabled apps and devices. Upload videos and images from your wireless camera to your Dropbox.">
   <meta name="keywords" content="dropbox,ftp,camera,wifi camera, ip camera">
   <meta property="og:image" content="https://ftpfordropbox.com/facebook-preview.png" />
 
+  <script type="text/javascript" src="//api.ftpfordropbox.com/ping"></script>
   <script type="text/javascript">
 !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.1.0";
 analytics.load("vPzoPNPYDogMwhoQPdO8JGB9YwVsgtWF");
 analytics.page()
 }}();
 </script>
+
 <style type="text/css">
 
   html {
@@ -75,12 +77,6 @@ analytics.page()
     height: 128px;
   }
 
-  @media (max-width: 600px) {
-    #hero .image {
-      background-size: contain;
-    }
-  }
-
   #connect-to-dropbox {
     text-align: center;
   }
@@ -92,9 +88,54 @@ analytics.page()
   #user-signed-up-waiting {
     text-align: center;
   }
+
+  #please-wait {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 9999;
+    background: white;
+    opacity: 0.9;
+
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
+
+  #please-wait .sk-three-bounce {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    margin: 0;
+  }
+
+  @media (max-width: 600px) {
+    #hero .image {
+      background-size: contain;
+    }
+
+    #hero h1 {
+      font-weight: 300;
+    }
+
+    .btn.btn-xl {
+      font-size: 20px;
+      padding: 0.25em 2em;
+    }
+
+  }
+
 </style>
 </head>
 <body>
+  <div id="please-wait">
+    <div class="sk-three-bounce">
+      <div class="sk-child sk-bounce1"></div>
+      <div class="sk-child sk-bounce2"></div>
+      <div class="sk-child sk-bounce3"></div>
+    </div>
+  </div>
+
   <section id="hero" class="page-row">
   <div class="jumbotron">
     <div class="container">
@@ -103,16 +144,18 @@ analytics.page()
     </div>
   </div>
 </section>
+
 <section class="hide" id="connect-to-dropbox">
   <a class="btn btn-primary btn-xl btn-dropbox" href="https://www.dropbox.com/1/oauth2/authorize?client_id=vmgx95t41aafho7&response_type=token">
-    Connect your Dropbox
+  Connect your Dropbox
   </a>
   <p>Free trial. No credit card required.</p>
 </section>
+
 <section class="hide" id="user-signed-up-waiting">
   <h3>Hooray, <span class="firstName"></span>!</h3>
-  <h3>We’ve sent e-mail to <span class="email"></span></h3>
-  <h3>Please check your inbox.</h3>
+  <h3>You’ve got mail at <span class="email"></span></h3>
+  <h3>Please check your inbox!</h3>
 </section>
 <section id="marketing">
 </section>
@@ -120,8 +163,72 @@ analytics.page()
 <footer>
   Made with ♡ by <a href="https://twitter.com/AndreasPizsa">Andreas Pizsa</a>.
 </footer>
-<script type="text/javascript" src="//cdn.jsdelivr.net/g/lodash@3.10,jquery@2,bootstrap@3,cookies.js"></script>
-<script type="text/coffeescript" src="index.coffee"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/coffeescript/1.7.1/coffee-script.min.js"></script>
+
+<script type="text/javascript" src="//cdn.jsdelivr.net/g/lodash@3.10,jquery@2,bootstrap@3,cookies.js,coffeescript"></script>
+
+<script type="text/coffeescript">
+objectFromUrlParameters = (hash)->
+  hashParameters = {}
+  hash.split('&').forEach (keyValue)->
+    [keyword,value] = keyValue.split '='
+    hashParameters[keyword]=value
+  return hashParameters
+
+updateDropboxAuthentication = (accessToken)->
+  $.ajax
+    url:        '//api.ftpfordropbox.com/api/beta/join'
+    type:       'post'
+    xhrFields:
+      withCredentials: true
+    headers:
+      Authorization : "Bearer #{accessToken}"
+  .then (data)->
+    analytics.alias data.uid
+    analytics.identify
+      email         : _.get data, 'email'
+      firstName     : _.get data, 'name_details.given_name'
+      lastName      : _.get data, 'name_details.surname'
+      name          : _.get data, 'name_details.familiar_name'
+      country       : _.get data, 'country'
+      locale        : _.get data, 'locale'
+      dropbox_uid   : data.uid
+      access_token  : accessToken
+  .fail ->
+    true
+  .always ->
+    updateVisibleSection()
+  true
+
+updateVisibleSection = ->
+  bindUserTraits()
+  traits = analytics.user().traits()
+  visibleSection = if traits.access_token then '#user-signed-up-waiting'  else '#connect-to-dropbox'
+  $(visibleSection).removeClass('hide').fadeIn()
+  $('#please-wait').fadeOut();
+
+bindUserTraits = ->
+  traits = analytics.user().traits()
+  _.forOwn traits, (value,key)-> $(".#{key}").text value
+
+analytics.ready ->
+  if hashParameters.access_token
+    updateDropboxAuthentication hashParameters.access_token
+  else
+    analytics.user().load()
+    updateVisibleSection()
+
+hashParameters = objectFromUrlParameters window.location.hash.substr 1
+history.pushState(
+  ""
+  document.title
+  window.location.pathname + window.location.search
+)
+
+$link = $('a[href^="https://www.dropbox.com/1/oauth2/authorize"]')
+$link.attr 'href', $link.attr('href') + "&redirect_uri=" + encodeURIComponent window.location.href
+
+analytics.on 'identify', bindUserTraits
+
+</script>
 </body>
 </html>
