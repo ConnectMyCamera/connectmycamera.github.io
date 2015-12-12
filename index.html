@@ -193,6 +193,7 @@ updateDropboxAuthentication = (accessToken)->
       locale        : _.get data, 'locale'
       dropbox_uid   : data.uid
       access_token  : accessToken
+    analytics.track 'Signed up for early access'
   .fail ->
     true
   .always ->
