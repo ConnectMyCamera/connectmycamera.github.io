@@ -124,6 +124,12 @@ analytics.page()
 
   }
 
+  @media (max-width: 768px) {
+    #ftp-credentials .col-xs-12.control-label {
+      text-align: left;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -151,22 +157,72 @@ analytics.page()
   <p>Free trial. No credit card required.</p>
 </section>
 
-<section class="hide" id="user-signed-up-waiting">
-  <h3>Hooray, <span class="firstName"></span>!</h3>
-  <h3>You’ve got mail at <span class="email"></span></h3>
-  <h3>Please check your inbox!</h3>
-</section>
-<section id="marketing">
-</section>
+<section id="ftp-credentials" class="show-if-loggedin hidden">
+  <h1 class="page-header">Your FTP settings</h1>
+  <p class="lead">Congratulations, <span class="firstname"></span>! You are now ready to access your Dropbox with your FTP-enabled app or device.<br/>Next, configure your FTP-enabled app or device with these settings:</p>
+  <div class="container">
+    <div class="form-horizontal col-xs-12 col-sm-9">
 
+      <div class="form-group form-group-lg">
+        <label class="col-xs-12 col-sm-4 control-label">Server</label>
+        <div class="col-xs-12 col-sm-8">
+          <input class="form-control" type="text" value="server.FTPforDropbox.com" readonly>
+        </div>
+      </div>
+
+      <div class="form-group form-group-lg">
+        <label class="col-xs-12 col-sm-4 control-label">Port</label>
+        <div class="col-xs-12 col-sm-8">
+          <input class="form-control" type="text" value="21" readonly>
+        </div>
+      </div>
+
+      <div class="form-group form-group-lg">
+        <label class="col-xs-12 col-sm-4 control-label">FTP Mode</label>
+        <div class="col-xs-12 col-sm-8">
+          <p class="form-control-static" style="text-align: left;"><i class="fa fa-check-square-o"></i> Passive Mode (PASV)</p>
+        </div>
+      </div>
+
+      <div class="form-group form-group-lg">
+        <label class="col-xs-12 col-sm-4 control-label">Username</label>
+        <div class="col-xs-12 col-sm-8">
+          <input data-user="email" class="form-control" type="text" value="" readonly>
+        </div>
+      </div>
+
+      <div class="form-group form-group-lg">
+        <label class="col-xs-12 col-sm-4 control-label">Password</label>
+        <div class="col-xs-12 col-sm-8">
+          <div class="input-group">
+            <input data-user="passphrase" id="password" class="form-control" type="password" value="hello" readonly>
+            <span class="input-group-btn">
+              <button class="btn btn-default btn-lg" data-toggle="button" type="button" id="showPassword" autocomplete="off"><i class="fa fa-eye"></i></button>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group form-group-lg">
+        <label class="col-xs-12 col-sm-4 control-label"></label>
+        <div class="col-xs-12 col-sm-8">
+          <button id="create-new-password" class="btn-lg btn btn-default">Set a new random password</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
 <footer>
   Made with ♡ by <a href="https://twitter.com/AndreasPizsa">Andreas Pizsa</a>.
 </footer>
 
 <script async type="text/javascript" src="//api.ftpfordropbox.com/ping"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/g/lodash@3.10,jquery@2,bootstrap@3,cookies.js,coffeescript"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/g/lodash@3.10,jquery@2,bootstrap@3,cookies.js,coffeescript,parse"></script>
 
 <script type="text/coffeescript">
+user = undefined
+
 objectFromUrlParameters = (hash)->
   hashParameters = {}
   hash.split('&').forEach (keyValue)->
@@ -176,47 +232,32 @@ objectFromUrlParameters = (hash)->
 
 updateDropboxAuthentication = (accessToken)->
   $.ajax
-    url:        '//api.ftpfordropbox.com/api/beta/join'
+    url:        '//api.ftpfordropbox.com/users/login'
     type:       'post'
     xhrFields:
       withCredentials: true
     headers:
       Authorization : "Bearer #{accessToken}"
-  .then (data)->
-    analytics.alias data.uid
-    analytics.identify
-      email         : _.get data, 'email'
-      firstName     : _.get data, 'name_details.given_name'
-      lastName      : _.get data, 'name_details.surname'
-      name          : _.get data, 'name_details.familiar_name'
-      country       : _.get data, 'country'
-      locale        : _.get data, 'locale'
-      dropbox_uid   : data.uid
-      access_token  : accessToken
-    analytics.track 'Signed up for early access'
+  .then updateFieldsWithUserData
   .fail ->
     true
   .always ->
-    updateVisibleSection()
+      updateVisibleSection()
   true
 
+updateFieldsWithUserData = (userData)->
+  _.forOwn userData, (value,key)->
+    $(".#{key}").text value
+    $("input[data-user='#{key}']").val value
+
 updateVisibleSection = ->
-  bindUserTraits()
-  traits = analytics.user().traits()
-  visibleSection = if traits.access_token then '#user-signed-up-waiting'  else '#connect-to-dropbox'
-  $(visibleSection).removeClass('hide').fadeIn()
+  visibleSection = if localStorage.access_token then '.show-if-loggedin' else '#connect-to-dropbox'
+  $(visibleSection).removeClass('hide').removeClass('hidden').fadeIn()
   $('#please-wait').fadeOut();
 
-bindUserTraits = ->
-  traits = analytics.user().traits()
-  _.forOwn traits, (value,key)-> $(".#{key}").text value
-
-analytics.ready ->
-  if hashParameters.access_token
-    updateDropboxAuthentication hashParameters.access_token
-  else
-    analytics.user().load()
-    updateVisibleSection()
+updateAuthorizationReturnUrl = ->
+  $link = $('a[href^="https://www.dropbox.com/1/oauth2/authorize"]')
+  $link.attr 'href', $link.attr('href') + "&redirect_uri=" + encodeURIComponent window.location.href
 
 hashParameters = objectFromUrlParameters window.location.hash.substr 1
 history.pushState(
@@ -225,10 +266,41 @@ history.pushState(
   window.location.pathname + window.location.search
 )
 
-$link = $('a[href^="https://www.dropbox.com/1/oauth2/authorize"]')
-$link.attr 'href', $link.attr('href') + "&redirect_uri=" + encodeURIComponent window.location.href
+updateAuthorizationReturnUrl()
 
-analytics.on 'identify', bindUserTraits
+if hashParameters.access_token
+  localStorage.access_token = hashParameters.access_token
+
+if localStorage.access_token
+  updateDropboxAuthentication localStorage.access_token
+else
+  updateVisibleSection()
+
+togglePassword = (onOrOff)->
+  currentState = $('#showPassword').hasClass 'active'
+  newState = onOrOff ? not currentState
+  if currentState isnt newState then $('#showPassword').click()
+
+$('#showPassword').click ->
+  $textField = $('#password')
+  type=$textField.attr 'type'
+  $textField.attr 'type', if type is 'password' then 'text' else 'password'
+
+$('input').click -> $(@).focus().select()
+$('#create-new-password').click ->
+  $('#please-wait').fadeIn()
+  $.ajax
+    url:        '//api.ftpfordropbox.com/users/login'
+    type:       'put'
+    xhrFields:
+      withCredentials: true
+    headers:
+      Authorization : "Bearer #{localStorage.access_token}"
+  .then updateFieldsWithUserData
+  .then togglePassword.bind this,true
+
+  .always ->
+    $('#please-wait').fadeOut()
 
 </script>
 </body>
