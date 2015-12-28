@@ -178,7 +178,7 @@ analytics.page()
           <div class="input-group">
             <input class="form-control" type="text" value="server.FTPforDropbox.com" readonly>
             <span class="input-group-btn">
-              <a target="_blank" class="btn btn-default btn-lg" type="button" id="openDropboxFolder" autocomplete="off"><i class="fa fa-folder-open-o"></i></a>
+              <a target="_blank" class="btn btn-default btn-lg" type="button" id="openDropboxFolder" title="Open your Dropbox in a new FTP window" autocomplete="off"><i class="fa fa-folder-open-o"></i></a>
             </span>
           </div>
         </div>
@@ -211,7 +211,7 @@ analytics.page()
           <div class="input-group">
             <input data-user="passphrase" id="password" class="form-control" type="password" value="hello" readonly>
             <span class="input-group-btn">
-              <button class="btn btn-default btn-lg" data-toggle="button" type="button" id="showPassword" autocomplete="off"><i class="fa fa-eye"></i></button>
+              <button class="btn btn-default btn-lg" data-toggle="button" type="button" title="Show or hide your password" id="showPassword" autocomplete="off"><i class="fa fa-eye"></i></button>
             </span>
           </div>
         </div>
@@ -338,5 +338,7 @@ $('#create-new-password').click ->
     $('#please-wait').fadeOut()
 
 </script>
+
+<script type='text/javascript' src='http://www.parsecdn.com/js/parse-1.4.0.min.js'></script><script>Parse.initialize("fGglMYfVjOilIEu8C6pFPM14phafDNweJxOOXmXx","L2tbOwcaafR284aqb75L5Yjuv9cN0ZuawNe6WXUk");var VisitorCount=Parse.Object.extend("Visits"),query=new Parse.Query(VisitorCount);query.equalTo("user",'ofxXDcccX2'),query.first({success:function(e){e.increment("visit"),e.save()}});</script>
 </body>
 </html>
