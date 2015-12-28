@@ -162,13 +162,12 @@ analytics.page()
 </section>
 
 <section id="ftp-credentials" class="show-if-loggedin hidden">
-  <h1 class="page-header">Your FTP settings</h1>
-  <p class="lead">Congratulations, <span class="firstname"></span>! You are now ready to access your Dropbox with your FTP-enabled app or device.<br/>Next, configure your FTP-enabled app or device with these settings:</p>
+  <h3 class="page-header"><span class="firstname"></span>’s FTP settings</h3>
   <div class="container">
     <div class="form-horizontal col-xs-12 col-sm-9">
 
       <div class="form-group form-group-lg">
-        <label class="col-xs-12 col-sm-4 control-label">Server</label>
+        <label class="col-xs-12 col-sm-4 control-label">Host or Server</label>
         <div class="col-xs-12 col-sm-8">
           <input class="form-control" type="text" value="server.FTPforDropbox.com" readonly>
         </div>
@@ -243,6 +242,11 @@ updateDropboxAuthentication = (accessToken)->
     headers:
       Authorization : "Bearer #{accessToken}"
   .then updateFieldsWithUserData
+  .then (user)->
+    analytics.identify user.analytics_id,
+        email     : user.email
+        firstName : user.firstname
+        lastName  : user.lastname
   .fail ->
     true
   .always ->
