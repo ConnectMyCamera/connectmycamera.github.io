@@ -134,7 +134,9 @@ analytics.page()
       text-align: left;
     }
   }
-
+  #ftp-credentials h3 > small {
+    white-space: nowrap;
+  }
 </style>
 </head>
 <body>
@@ -149,7 +151,8 @@ analytics.page()
   <section id="hero" class="page-row">
   <div class="jumbotron">
     <div class="container">
-      <h1>Access your Dropbox with FTP</h1>
+      <h1>FTP for Dropbox<p>FTPforDropbox.com</p></h1>
+
       <div class="image"></div>
     </div>
   </div>
@@ -163,8 +166,10 @@ analytics.page()
 </section>
 
 <section id="ftp-credentials" class="show-if-loggedin hidden">
-  <h3 class="page-header"><span class="firstname"></span>’s FTP settings</h3>
   <div class="container">
+
+    <h3 class="page-header"><span class="firstname"></span>’s FTP settings <small><span class="hidden-xs">&middot;</span> Not <span class="firstname"></span>? <a href="" id="sign-out">Sign out</a></small></h3>
+
     <div class="form-horizontal col-xs-12 col-sm-9">
 
       <div class="form-group form-group-lg">
@@ -262,7 +267,9 @@ updateFieldsWithUserData = (userData)->
     $("input[data-user='#{key}']").val value
 
 updateVisibleSection = ->
-  visibleSection = if localStorage.access_token then '.show-if-loggedin' else '#connect-to-dropbox'
+  visibleSection    = if localStorage.access_token then '.show-if-loggedin' else '#connect-to-dropbox'
+  invisibleSection  = if localStorage.access_token then '#connect-to-dropbox' else '.show-if-loggedin'
+  $(invisibleSection).fadeOut()
   $(visibleSection).removeClass('hide').removeClass('hidden').fadeIn()
   $('#please-wait').fadeOut();
 
@@ -304,6 +311,11 @@ $('#happy-to-help').click ->
   ]
 
 $('input').click -> $(@).focus().select()
+$('#sign-out').click (event)->
+  event.preventDefault()
+  window.localStorage.removeItem 'access_token'
+  updateVisibleSection()
+
 $('#create-new-password').click ->
   $('#please-wait').fadeIn()
   $.ajax
