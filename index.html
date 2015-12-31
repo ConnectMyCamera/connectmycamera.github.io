@@ -31,13 +31,12 @@ analytics.page()
   }
 
   body {
-    margin-bottom: 100px;
+    margin-bottom: 140px;
     color: #7b8994;
-    text-align: center;
   }
 
   footer {
-    margin-top: 20px;
+    margin-top: 60px;
     position: absolute;
     bottom: 0;
     width: 100%;
@@ -64,6 +63,7 @@ analytics.page()
 
   #hero .jumbotron {
     background: transparent;
+    text-align: center;
   }
 
   h1, h2, h3 {
@@ -137,6 +137,19 @@ analytics.page()
   #ftp-credentials h3 > small {
     white-space: nowrap;
   }
+
+  #benefits h2 {
+    margin-top: 2em;
+  }
+
+  #benefits h2 i { margin-right: 0.25em; opacity: 0.25}
+  #benefits p {
+    font-size: 1.5em;
+    line-height: 2em;
+    font-weight: 200;
+  }
+
+  .float-none { float: none; }
 </style>
 </head>
 <body>
@@ -158,19 +171,53 @@ analytics.page()
   </div>
 </section>
 
-<section class="hide" id="connect-to-dropbox">
+<section class="hide hide-if-loggedin" id="connect-to-dropbox">
   <a class="btn btn-primary btn-xl btn-dropbox" href="https://www.dropbox.com/1/oauth2/authorize?client_id=qb5m6mf2vvjhssk&response_type=token">
-  Connect your Dropbox
+  Connect your Dropbox  <i class="fa fa-dropbox"></i>
   </a>
   <p><strong>Beta.</strong> Free trial. No credit card required.</p>
 </section>
 
+<section id="benefits" class="hide-if-loggedin">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-8  center-block float-none">
+        <h2 class="text-center"><i class="fa fa-cloud"></i>  Hosted in the cloud</h2>
+        <p>No software to download or install and no server to maintain: just connect your Dropbox account and your FTP server is ready with a click.</p>
+      </div>
+
+      <div class="col-sm-8 center-block float-none">
+        <h2 class="text-center"><i class="fa fa-lock"></i>  Protected in your Dropbox</h2>
+        <p>Upload and download files from a secure, password protected folder in your Dropbox that is kept entirely separate from your other documents.</p>
+      </div>
+
+      <div class="col-sm-8 center-block float-none">
+        <h2 class="text-center"><i class="fa fa-envelope"></i> Too large for e-mail?</h2>
+        <p>Receive files in your Dropbox that are too large to send by e-mail but can be transferred with FTP.</p>
+      </div>
+
+      <div class="col-sm-8 center-block float-none">
+        <h2 class="text-center"><i class="fa fa-video-camera"></i> For apps and devices</h2>
+        <p>Store videos from your security camera directly on Dropbox or integrate Dropbox into FTP-based workflows.</p>
+      </div>
+
+      <div class="col-xs-12 text-center">
+        <br/><br/>
+        <a class="btn btn-primary btn-xl btn-dropbox" href="https://www.dropbox.com/1/oauth2/authorize?client_id=qb5m6mf2vvjhssk&response_type=token">
+        Start your free trial <i class="fa fa-dropbox"></i>
+        </a>
+      </div>
+
+
+    </div>
+  </div>
+</section>
 <section id="ftp-credentials" class="show-if-loggedin hidden">
   <div class="container">
 
-    <h3 class="page-header"><span class="firstname"></span>’s FTP settings <small><span class="hidden-xs">&middot;</span> Not <span class="firstname"></span>? <a href="" id="sign-out">Sign out</a></small></h3>
+    <h3 class="page-header text-center"><span class="firstname"></span>’s FTP settings <small><span class="hidden-xs">&middot;</span> Not <span class="firstname"></span>? <a href="" id="sign-out">Sign out</a></small></h3>
 
-    <div class="form-horizontal col-xs-12 col-sm-9">
+    <div class="form-horizontal col-xs-12 col-sm-12 center-block float-none">
 
       <div class="form-group form-group-lg">
         <label class="col-xs-12 col-sm-4 control-label">Host or Server</label>
@@ -211,7 +258,7 @@ analytics.page()
           <div class="input-group">
             <input data-user="passphrase" id="password" class="form-control" type="password" value="hello" readonly>
             <span class="input-group-btn">
-              <button class="btn btn-default btn-lg" data-toggle="button" type="button" title="Show or hide your password" id="showPassword" autocomplete="off"><i class="fa fa-eye"></i></button>
+              <button class="btn btn-default btn-lg" data-toggle="button" type="button" title="Show or hide your password" id="showPassword" autocomplete="off">Show</button>
             </span>
           </div>
         </div>
@@ -228,9 +275,9 @@ analytics.page()
   </div>
 </section>
 <footer>
+  <a href="#happy-to-help" id="happy-to-help">Questions? I’m happy to help!</a><br/>
   Made with ♡ by <a href="https://twitter.com/AndreasPizsa">Andreas Pizsa</a>.<br/>
   <a href="https://twitter.com/AndreasPizsa">Follow me on Twitter.</a><br/>
-  <a href="#happy-to-help" id="happy-to-help">Questions? I’m happy to help!</a><br/>
 </footer>
 
 <script async type="text/javascript" src="//api.ftpfordropbox.com/ping"></script>
@@ -273,8 +320,8 @@ updateFieldsWithUserData = (userData)->
     $("#openDropboxFolder").attr 'href', "ftp://#{userData.email}:#{userData.passphrase}@server.ftpfordropbox.com"
 
 updateVisibleSection = ->
-  visibleSection    = if localStorage.access_token then '.show-if-loggedin' else '#connect-to-dropbox'
-  invisibleSection  = if localStorage.access_token then '#connect-to-dropbox' else '.show-if-loggedin'
+  visibleSection    = if localStorage.access_token then '.show-if-loggedin' else '.hide-if-loggedin'
+  invisibleSection  = if localStorage.access_token then '.hide-if-loggedin' else '.show-if-loggedin'
   $(invisibleSection).fadeOut()
   $(visibleSection).removeClass('hide').removeClass('hidden').fadeIn()
   $('#please-wait').fadeOut();
