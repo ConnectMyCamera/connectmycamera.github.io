@@ -26,6 +26,75 @@ analytics.page()
 </script>
 
 <style type="text/css">
+@-moz-keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    -moz-transform: translateY(0);
+    transform: translateY(0);
+  }
+  40% {
+    -moz-transform: translateY(-30px);
+    transform: translateY(-30px);
+  }
+  60% {
+    -moz-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+@-webkit-keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  40% {
+    -webkit-transform: translateY(-30px);
+    transform: translateY(-30px);
+  }
+  60% {
+    -webkit-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  40% {
+    -moz-transform: translateY(-30px);
+    -ms-transform: translateY(-30px);
+    -webkit-transform: translateY(-30px);
+    transform: translateY(-30px);
+  }
+  60% {
+    -moz-transform: translateY(-15px);
+    -ms-transform: translateY(-15px);
+    -webkit-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+
+.arrow {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  margin-left: -20px;
+  width: 40px;
+  height: 40px;
+  color: rgba(0,0,0,0.5);
+  display: block;
+  font-size: 40px;
+  line-height: 40px;
+}
+
+.bounce {
+  -moz-animation: bounce 2s infinite;
+  -webkit-animation: bounce 2s infinite;
+  animation: bounce 2s infinite;
+}
+</style>
+<style type="text/css">
 
   html {
     position: relative;
@@ -211,7 +280,7 @@ analytics.page()
   <section id="hero" class="page-row">
     <div class="jumbotron">
       <div class="container">
-        <h1>Connect your security camera to Dropbox</h1>
+        <h1>Connect your camera to Dropbox</h1>
         <div class="col-xs-12">
           <img class="img-responsive center-block" src="hero2.jpg"/>
         </div>
@@ -224,7 +293,8 @@ analytics.page()
   <a class="btn btn-primary btn-xl btn-dropbox" href="https://www.dropbox.com/1/oauth2/authorize?client_id=qb5m6mf2vvjhssk&response_type=token">
   Connect to Dropbox  <i class="fa fa-dropbox"></i>
   </a>
-  <p><strong>Beta.</strong> Free trial. No credit card required.</p>
+  <p>Not using Dropbox? <a href="https://db.tt/yhCdHsVU" target="_blank">Click here to get your 2GB Dropbox account for <strong>free</strong>!</a></p>
+  <!--<p><strong>Beta.</strong> Free trial. No credit card required.</p>-->
 </section>
 
 <section id="benefits" class="hide-if-loggedin" style="background:white">
@@ -281,7 +351,7 @@ analytics.page()
         </div>
         <div class="col-sm-6">
           <h1>Record directly to Dropbox</h1>
-          <p>Your camera records snapshots and videos directly to your Dropbox where they are safe and secure even if your cam gets stolen or damaged. So put your computer into sleep mode and save the money you’d spend on memory cards.</p>
+          <p>Your camera records snapshots and videos directly to your Dropbox where they are safe and secure even if your cam gets stolen or damaged. So, put your computer in sleep mode and save the money you’d otherwise spend on memory cards!</p>
         </div>
       </div>
     </div>
@@ -421,8 +491,23 @@ analytics.page()
   <a href="https://twitter.com/AndreasPizsa">Follow me on Twitter.</a><br/>
 </footer>
 
+<div class="arrow bounce hidden"><i class="fa fa-chevron-down"></i></div>
 <script type="text/javascript" src="//cdn.jsdelivr.net/g/lodash@3.10,jquery@2,bootstrap@3,cookies.js,coffeescript,parse"></script>
-
+<script type="text/javascript">
+$(function(){
+  var $arrow = $('.arrow.bounce').fadeOut();
+  var showScrollArrowTimer = window.setTimeout(function(){
+    $arrow.removeClass('hidden').fadeIn()
+  },3000);
+  $(window).scroll(function(){
+    if(showScrollArrowTimer) {
+      window.clearTimeout(showScrollArrowTimer);
+      showScrollArrowTimer = 0;
+    }
+    $arrow.fadeOut()
+  })
+})
+</script>
 <script type="text/coffeescript">
 user = undefined
 
