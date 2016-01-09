@@ -24,6 +24,42 @@ analytics.load(
 analytics.page()
 }}();
 </script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/g/lodash@3.10,jquery@2,bootstrap@3,cookies.js,coffeescript,parse"></script>
+
+<script type="text/javascript">
+  (function parseWindowLocationQuery(){
+    var d=decodeURIComponent,
+    q=window.location.query=window.location.query||{},
+    pairs=window.location.search.substr(1).split('&'),
+    i;
+    while(i=pairs.pop()) {
+      var keyValue=i.match(/([^=]*)=?(.*)/)
+      if(keyValue) q[d(keyValue[1]).toLowerCase()]=d(keyValue[2]);
+    }
+  })();
+
+  if (!window.location.origin) { // Some browsers (mainly IE) does not have this property, so we need to build it manually...
+    window.location.origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ? (':' + window.location.port) : '');
+  }
+
+  $(function(){
+    if(window.location.query.brand !== undefined) {
+      if(window.location.query.brand) localStorage.cameraBrand = window.location.query.brand;
+      else localStorage.removeItem('cameraBrand');
+
+      if(window.location.query.model) localStorage.cameraModel = window.location.query.brand;
+      else localStorage.removeItem('cameraModel');
+    }
+
+    if(localStorage.cameraBrand) $('body').addClass('brand-'+localStorage.cameraBrand);
+    if(localStorage.cameraModel) $('body').addClass('model-'+localStorage.cameraModel);
+
+    if(localStorage.cameraBrand) analytics.identify({
+      cameraBrand: window.location.query.brand,
+      cameraModel: window.location.query.model
+    });
+  });
+</script>
 
 <style type="text/css">
 @-moz-keyframes bounce {
@@ -94,6 +130,8 @@ analytics.page()
   animation: bounce 2s infinite;
 }
 </style>
+
+<link href='https://fonts.googleapis.com/css?family=Raleway:400,200,600' rel='stylesheet' type='text/css'>
 <style type="text/css">
 
   html {
@@ -106,8 +144,12 @@ analytics.page()
     color: #7b8994;
     text-shadow: 0 1px white;
     background: #daedfb;
-    font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    font-family: "Raleway", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
     font-weight: 400;
+  }
+
+  body, p, h1, h2, h3, h4, h5 {
+    font-family: "Raleway", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   }
 
   .btn {
@@ -268,6 +310,51 @@ analytics.page()
     transition: opacity 0.25s, -webkit-filter 0.25s;
   }
 </style>
+
+<!------------------------------------------------------------------------------
+  MANUFACTURER STYLES
+------------------------------------------------------------------------------->
+<style type="text/css">
+  body[class*="brand-"] #works-with-these-cameras { display: none; }
+
+  /*----------------------------------------------------------------------------
+    D-LINK
+  ----------------------------------------------------------------------------*/
+  body.brand-dlink .camera-name:before {
+    display: inline;
+    content: "D-Link ";
+  }
+
+  body.brand-dlink img[src="images/img-camera.png"] {
+    content: url(http://www.dlink.com/-/media/Images/Products/DCS/932L/B1/DCS932LB1Image%20LFront.png?w=300&h=400&crop=1);
+  }
+
+  body.brand-dlink .jumbotron img[src="images/img-camera.png"] {
+    top: -23% !important;
+    left: 3%;
+  }
+
+  /*----------------------------------------------------------------------------
+    FOSCAM
+  ----------------------------------------------------------------------------*/
+  body.brand-foscam .camera-name:before {
+    display: inline;
+    content: "Foscam ";
+  }
+
+  body.brand-foscam img[src="images/img-camera.png"] {
+    content: url(cameras/foscam/generic.png);
+    -webkit-filter: drop-shadow(0px 8px 4px rgba(0,0,0,0.1));
+  }
+
+  body.brand-foscam .jumbotron img[src="images/img-camera.png"] {
+    height: 126%;
+    width: auto;
+    top: -7% !important;
+    left: 6%;
+  }
+
+</style>
 </head>
 <body>
   <div id="please-wait">
@@ -281,11 +368,12 @@ analytics.page()
   <section id="hero" class="page-row">
     <div class="jumbotron">
       <div class="container">
-        <h1>Connect your camera to Dropbox</h1>
-        <div class="col-xs-12">
-          <img class="img-responsive center-block" src="hero2.jpg"/>
+        <h1>Connect your <span class="camera-name">camera</span> to Dropbox</h1>
+        <div class="col-xs-12" style="position:relative; margin-top: 2em; margin-bottom: 2em">
+          <img class="img-responsive col-xs-8 col-md-5 center-block float-none" src="images/cloud.png" style="opacity:0.35">
+          <img class="img-responsive col-xs-6 col-xs-offset-6 col-md-4 col-md-offset-6" src="images/dropbox.png"            style="position: absolute; top:10%">
+          <img class="img-responsive col-xs-6 col-xs-offset-0 col-md-4 col-md-offset-2" src="images/img-camera.png"         style="position: absolute; top: 0">
         </div>
-        <div class="image"></div>
       </div>
     </div>
   </section>
@@ -303,12 +391,12 @@ analytics.page()
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-md-5" style="position:relative">
-          <img style="position:absolute; left: -30%; top: 50%; z-index: 0; opacity: 0.9" src="http://highfivecoffee.com/wp-content/themes/H5C/images/coffee-ring-3.png"/>
-          <h1>Grab a coffee, connect your camera in minutes</h1>
+          <img style="position:absolute; left: -30%; top: 50%; z-index: 0; opacity: 0.9" src="images/coffee-ring-3.png"/>
+          <h1>Grab a coffee, connect your <span class="camera-name">camera</span> in minutes</h1>
           <p>Cloud services for security cameras can be frustrating. We made it easy to get your cam connected to Dropbox. Give us 5 minutes, we’ll show you how.</p>
         </div>
         <div class="col-md-offset-1 col-md-6">
-          <img class="img-responsive center-block" src="img-camera.png">
+          <img class="img-responsive center-block" src="images/img-camera.png">
           <div id="works-with-these-cameras">
             <style>
               #works-with-these-cameras {
@@ -323,11 +411,11 @@ analytics.page()
             </style>
             <p class="text-center">Works withe these and more camera brands that support FTP</p>
             <div class="row">
-              <div class="col-xs-5 col-xs-offset-0 col-sm-2 col-sm-offset-1"><img class="img-responsive" src="logo-dlink.svg"></div>
-              <div class="col-xs-5 col-xs-offset-1 col-sm-2 col-sm-offset-0"><img class="img-responsive" src="logo-samsung.svg"></div>
-              <div class="col-xs-5 col-xs-offset-0 col-sm-2 col-sm-offset-0"><img class="img-responsive" src="logo-panasonic.svg"></div>
-              <div class="col-xs-5 col-xs-offset-1 col-sm-2 col-sm-offset-0"><img class="img-responsive" src="logo-foscam.png"></div>
-              <div class="hidden-xs col-sm-2"><img class="img-responsive" src="logo-tplink.svg"></div>
+              <div class="col-xs-5 col-xs-offset-0 col-sm-2 col-sm-offset-1"><img class="img-responsive" src="images/logo-dlink.svg"></div>
+              <div class="col-xs-5 col-xs-offset-1 col-sm-2 col-sm-offset-0"><img class="img-responsive" src="images/logo-samsung.svg"></div>
+              <div class="col-xs-5 col-xs-offset-0 col-sm-2 col-sm-offset-0"><img class="img-responsive" src="images/logo-panasonic.svg"></div>
+              <div class="col-xs-5 col-xs-offset-1 col-sm-2 col-sm-offset-0"><img class="img-responsive" src="images/logo-foscam.png"></div>
+              <div class="hidden-xs col-sm-2"><img class="img-responsive" src="images/logo-tplink.svg"></div>
             </div>
           </div>
         </div>
@@ -340,8 +428,8 @@ analytics.page()
       <div class="row">
         <div class="col-sm-6">
           <div style="display: block; width: 100%; height: 100%; position: relative">
-            <img class="img-responsive" src="cloud.png" style="position:absolute; width: 200px"/>
-            <img class="img-responsive" src="dropbox.png"style="
+            <img class="img-responsive" src="images/cloud.png" style="position:absolute; width: 200px"/>
+            <img class="img-responsive" src="images/dropbox.png"style="
               width: 300px;
               margin-top: 20px;
               position: relative;
@@ -369,20 +457,20 @@ analytics.page()
         <div class="col-sm-offset-1 col-sm-6" style="position:relative; height:26em">
 
           <div style="position:absolute; width:100%; bottom: 10%; right: 0;">
-            <img class="img-responsive" src="img-notebook.svg" />
-            <div style="overflow: hidden; position: absolute;top: 10%; background: url(image-suspect-cookies.jpg) center center no-repeat;width: 72%;height: 76%;left: 14%;background-size: cover;opacity: 0.5;">
+            <img class="img-responsive" src="images/img-notebook.svg" />
+            <div style="overflow: hidden; position: absolute;top: 10%; background: url(images/image-suspect-cookies.jpg) center center no-repeat;width: 72%;height: 76%;left: 14%;background-size: cover;opacity: 0.5;">
             </div>
           </div>
 
           <div style="position:absolute; width:60%; bottom: 5%; right: 45%">
-            <img src="img-tablet-landscape.svg" />
-            <div style="overflow: hidden; position: absolute;top: 8%; background: url(image-suspect-cookies.jpg) center center no-repeat;width: 78.5%;h;height: 83%;left: 10.5%;background-size: cover;opacity: 0.5;">
+            <img src="images/img-tablet-landscape.svg" />
+            <div style="overflow: hidden; position: absolute;top: 8%; background: url(images/image-suspect-cookies.jpg) center center no-repeat;width: 78.5%;h;height: 83%;left: 10.5%;background-size: cover;opacity: 0.5;">
             </div>
           </div>
 
           <div style="position:absolute; width:40%; bottom: 0; right: 30%">
-            <img src="img-phone-landscape.svg" />
-            <div style="overflow: hidden; position: absolute;top: 8%; background: url(image-suspect-cookies.jpg) center center no-repeat;width: 71.5%;h;height: 83%;left: 13.5%;background-size: cover;opacity: 0.5;">
+            <img src="images/img-phone-landscape.svg" />
+            <div style="overflow: hidden; position: absolute;top: 8%; background: url(images/image-suspect-cookies.jpg) center center no-repeat;width: 71.5%;h;height: 83%;left: 13.5%;background-size: cover;opacity: 0.5;">
             </div>
           </div>
 
@@ -395,7 +483,7 @@ analytics.page()
     <div class="container">
       <div class="row">
         <div class="col-sm-6">
-            <img class="img-responsive" src="img-whatsapp.jpg" style="border: 1px solid silver;">
+            <img class="img-responsive" src="images/img-whatsapp.jpg" style="border: 1px solid silver;">
         </div>
         <div class="col-sm-6">
           <h1>Easily share on Whatsapp, Facebook and other social media</h1>
@@ -413,9 +501,10 @@ analytics.page()
     </div>
   </div>
 
-  <div class="container">
+  <div class="container" style="padding-top: 8em; padding-bottom: 8em;">
     <div class="row">
       <div class="col-xs-12 text-center">
+        <h1>Get started for free.</h1>
         <br/><br/>
         <a class="btn btn-primary btn-xl btn-dropbox" href="https://www.dropbox.com/1/oauth2/authorize?client_id=qb5m6mf2vvjhssk&response_type=token">
         Connect to Dropbox <i class="fa fa-dropbox"></i>
@@ -498,13 +587,27 @@ analytics.page()
   <a href="https://twitter.com/AndreasPizsa">Follow me on Twitter.</a><br/>
 </footer>
 
-<script type="text/javascript" src="//cdn.jsdelivr.net/g/lodash@3.10,jquery@2,bootstrap@3,cookies.js,coffeescript,parse"></script>
 <script type="text/javascript">
+/*------------------------------------------------------------------------------
+  SCROLL ARROW
+------------------------------------------------------------------------------*/
 $(function(){
   var $arrow = $('.arrow.bounce').fadeOut();
   var showScrollArrowTimer = window.setTimeout(function(){
     $arrow.removeClass('hidden').fadeIn()
   },3000);
+
+  $arrow.click(function(){
+    target = $('#benefits');
+    target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+    if (target.length) {
+      $('html,body').animate({
+        scrollTop: target.offset().top
+      }, 500);
+      return false;
+    }
+  })
+
   $(window).scroll(function(){
     if(showScrollArrowTimer) {
       window.clearTimeout(showScrollArrowTimer);
@@ -559,7 +662,9 @@ updateVisibleSection = ->
 
 updateAuthorizationReturnUrl = ->
   $link = $('a[href^="https://www.dropbox.com/1/oauth2/authorize"]')
-  $link.attr 'href', $link.attr('href') + "&redirect_uri=" + encodeURIComponent window.location.href
+  redirectUrl = encodeURIComponent window.location.origin
+  if redirectUrl[redirectUrl.length-1] isnt '/' then redirectUrl+='/'
+  $link.attr 'href', $link.attr('href') + "&redirect_uri=" + redirectUrl
 
 hashParameters = objectFromUrlParameters window.location.hash.substr 1
 history.pushState(
