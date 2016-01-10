@@ -17,9 +17,9 @@
   <script type="text/javascript">
 !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","page","once","off","on"];analytics.factory=function(t){return function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var e=document.createElement("script");e.type="text/javascript";e.async=!0;e.src=("https:"===document.location.protocol?"https://":"http://")+"cdn.segment.com/analytics.js/v1/"+t+"/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION="3.1.0";
 analytics.load(
-  /(ftpfordropbox|connectftp)\.com/.test(window.location.host)
-    ? "ym0oVfgV6zanOtmH1SuFjgLnt31nsOs4"
-    : "vPzoPNPYDogMwhoQPdO8JGB9YwVsgtWF"
+  /localhost|127\.0\.0\.1/.test(window.location.host)
+    ? "vPzoPNPYDogMwhoQPdO8JGB9YwVsgtWF"
+    : "ym0oVfgV6zanOtmH1SuFjgLnt31nsOs4"
   );
 analytics.page()
 }}();
@@ -182,7 +182,7 @@ analytics.page()
     padding: 0.25em 2em;
   }
 
-  .btn.btn-default {
+  #benefits .btn.btn-default {
     border-color: rgb(16, 135, 221);
     color: rgb(16, 135, 221);
   }
@@ -530,7 +530,7 @@ analytics.page()
         <label class="col-xs-12 col-sm-4 control-label">Host or Server</label>
         <div class="col-xs-12 col-sm-8">
           <div class="input-group">
-            <input class="form-control" type="text" value="dropbox.connectftp.com" readonly>
+            <input class="form-control" type="text" value="ftp.connectmycamera.com" readonly>
             <span class="input-group-btn">
               <a target="_blank" class="btn btn-default btn-lg" type="button" id="openDropboxFolder" title="Open your Dropbox in a new FTP window" autocomplete="off"><i class="fa fa-folder-open-o"></i></a>
             </span>
@@ -651,7 +651,7 @@ updateFieldsWithUserData = (userData)->
   _.forOwn userData, (value,key)->
     $(".#{key}").text value
     $("input[data-user='#{key}']").val value
-    $("#openDropboxFolder").attr 'href', "ftp://#{userData.email}:#{userData.passphrase}@server.ftpfordropbox.com"
+    $("#openDropboxFolder").attr 'href', "ftp://#{userData.email}:#{userData.passphrase}@ftp.connectmycamera.com"
 
 updateVisibleSection = ->
   visibleSection    = if localStorage.access_token then '.show-if-loggedin' else '.hide-if-loggedin'
